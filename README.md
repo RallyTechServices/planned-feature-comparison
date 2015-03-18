@@ -1,41 +1,13 @@
-#Release Metrics
+#Release Metrics (in-progress)
+This app is in progress and will be continuously changing to meet the needs of the customer as their data and deployment process evolves.
 
+This app provides a view of planned features for a deployment as of a certain date compared with features associated with the deployment as of the current date.
 
-####Data included in the point release calculations
-Number of Features delivered:  Number of features that have at least one story associated with the 
-code deployment release that was Accepted during the release time box.  
+The inputs are a start date and a deployment type (point release).
 
-Feature Cycle:  Average time of all delivered features from the latest of either the start date of the release or 
-the date the feature was created to the end of the release time box.  
+The app will list all features "planned" for the deployment as of the start date and all features that are in the deployment as of the current date.
 
-Number of Defects delivered:  Number of defects associated with the code deployment that were Accepted during
-the release time box.  
+If a feature was in the deployment in between the start date and the current date, but not in the deployment on either the start date or current date, then the feature will not be listed.
 
-Defect Cycle:  Average time of all delivered defects from the latest of either the start date of the release or 
-the date the defect was created to the end of the release time box.  
-
-Number of changes from Planned, Code Freeze and Production:  The difference in the number of features that
-were associated with the code deployment at the beginning of the release time box and those delivered at the end of the release timebox.  
-
-Release Cycle Time: N/A
-
-Mean Time to Resolution for blockers (MTTR) during the development process:  
-
-Export File Columns:
-Deployment Name
-Deployment Start Date
-Deployment End Date
-Feature Formatted ID
-Feature Name
-Planned
-Delivered
-Artifact FormattedID
-Artifact Name
-End State 
-Cycle Start
-Cycle End 
-Blocker Time 
-
-
-
+![ScreenShot](/images/release-metrics.png)
 
