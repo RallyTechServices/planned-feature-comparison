@@ -21,14 +21,19 @@ Ext.define('CustomApp', {
         this.down('#selector_box').add({
             xtype: 'rallydatefield',
             fieldLabel: 'Start Date',
-            itemId: 'dt-start'
+            itemId: 'dt-start',
+            labelAlign: 'right',
+            margin: 10
         });
 
         this.down('#selector_box').add({
             xtype: 'rallyfieldvaluecombobox',
             itemId: 'cb-deployment',
             model: this.deploymentModel,
-            field: this.deploymentField
+            field: this.deploymentField,
+            margin: 10,
+            fieldLabel: 'Deployment',
+            labelAlign: 'right'
         });
         
         this.down('#selector_box').add({
@@ -54,17 +59,20 @@ Ext.define('CustomApp', {
         });
     },
     _run: function(){
-        this._setWorking(true); 
         this.logger.log('_run');
 
         var deploymentSchedule = this.down('#cb-deployment').getValue();
         var startDate = this.down('#dt-start').getValue();
-
+        if (isNaN(Date.parse(startDate))){
+            Rally.ui.notify.Notifier.showWarning({message: "No start date selected.  Please select a start date to run the report"});
+            return;
+        }
+        this._setWorking(true);
         this._fetchFeatures(deploymentSchedule, startDate).then({
             scope: this,
             success: function(features){
                 var store = this._createStore(features,startDate,deploymentSchedule);
-                this._buildGrid(store);
+                this._buildGrid(store,startDate);
             }
         }).always(function(){
             this._setWorking(false);
@@ -72,7 +80,13 @@ Ext.define('CustomApp', {
         
     },
     _export: function(){
-        
+        var grid = this.down('rallygrid');
+        var startDate = this.down('#dt-start').getValue();
+        if (grid){
+            var filename = 'deployment-history-' + Rally.util.DateTime.format(startDate, 'Y-m-d') + '.csv';
+            var csv = Rally.technicalservices.FileUtilities.getCSVFromGrid(grid);
+            Rally.technicalservices.FileUtilities.saveCSVToFile(csv, filename);
+        }
     },
     _fetchFeatures: function(deploymentSchedule, startDate){
         var deferred = Ext.create('Deft.Deferred');
@@ -151,8 +165,9 @@ Ext.define('CustomApp', {
         });
         return store;
     },
-    _buildGrid: function(store){
-
+    _buildGrid: function(store, startDate){
+        var start_date = Rally.util.DateTime.formatWithDefault(startDate);
+        var today = Rally.util.DateTime.formatWithDefault(new Date());
         if (this.down('rallygrid')){
             this.down('rallygrid').destroy();
         }
@@ -167,11 +182,11 @@ Ext.define('CustomApp', {
                 dataIndex: 'Name',
                 flex: 1
             },{
-                text: 'Deployment (Start Date)',
+                text: 'Deployment (' + start_date + ')',
                 dataIndex: this._getDeploymentFieldThen(),
                 flex: 1
             },{
-                text: 'Deployment (Today)',
+                text: 'Deployment (' + today + ')',
                 dataIndex: this.deploymentField,
                 flex: 1
             }]
