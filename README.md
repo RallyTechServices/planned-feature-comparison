@@ -1,4 +1,4 @@
-#Release Metrics (in-progress)
+#Planned Feature Comparison (in-progress)
 This app is in progress and will be continuously changing to meet the needs of the customer as their data and deployment process evolves.
 
 This app provides a view of planned features for a deployment as of a certain date compared with features associated with the deployment as of the current date.
